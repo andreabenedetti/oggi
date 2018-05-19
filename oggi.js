@@ -18,36 +18,48 @@ let y = d3.scaleLog()
 let size = d3.scaleLinear()
 .range([3, 60]);
 
-let colorScale = d3.scaleLinear(d3.interpolateWarm())
-.range([0, 1]);
+let colorScale = d3.scaleLinear()
+.interpolate(d3.interpolateRgb)
+.range([d3.rgb("#777777"), d3.rgb('#FF0000')]);
 
 d3.csv("honeyproduction.csv", function(error, data) {
 	if (error) throw error;
 
 	x.domain(d3.extent(data, d => { 
-		console.log(+d.stocks)
 		return +d.stocks; }
 	));
 
 	y.domain(d3.extent(data, d => { 
-		console.log(+d.prodvalue)
 		return +d.prodvalue; }
 	));
 
 	size.domain(d3.extent(data, d => { 
-		console.log(+d.numcol)
 		return +d.numcol; }
+	));
+
+	colorScale.domain(d3.extent(data, d => { 
+		return +d.year; }
 	));
 
 	svg.selectAll("svg")
 	.data(data)
 	.enter()
 	.append("rect")
-	.attr("fill", d => { return colorScale(d.priceperlb); console.log(colorScale(d.priceperlb))} )
-	.attr("width", 1 )
+	.attr("fill", d => { return colorScale(d.year); } )
+	.attr("width", 1.5 )
 	.attr("height", d => { return size(d.numcol) } )
 	.attr("x", d => { return x(d.stocks)} ) 
-	.attr("y", d => { return y(d.prodvalue)} ) 
+	.attr("y", d => { return y(d.prodvalue)} )
+
+	svg.selectAll("text")
+	.data(data)
+	.enter()
+	.append("text")
+	.attr("x", d => { return x(d.stocks)} ) 
+	.attr("y", d => { return y(d.prodvalue) - 2} ) 
+	.attr("fill", d => { return colorScale(d.year); } )
+	.text(d => { return d.state } )
+	.classed("label", true)
 
 	// console.log(JSON.stringify(data, null, "\t"));
 
