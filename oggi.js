@@ -20,7 +20,15 @@ let size = d3.scaleLinear()
 
 let colorScale = d3.scaleLinear()
 .interpolate(d3.interpolateRgb)
-.range([d3.rgb("#777777"), d3.rgb('#FF0000')]);
+.range([d3.rgb("#E8E4E4"), d3.rgb('#FF0000')]);
+
+let xAxis = d3.axisBottom(x)
+.tickSize(height - margin * 1.5)
+.tickFormat(d3.format(".0s"));
+
+let yAxis = d3.axisLeft(y)
+.tickSize(width - margin * 1.5)
+.tickFormat(d3.format(".0s"));
 
 d3.csv("honeyproduction.csv", function(error, data) {
 	if (error) throw error;
@@ -40,6 +48,15 @@ d3.csv("honeyproduction.csv", function(error, data) {
 	colorScale.domain(d3.extent(data, d => { 
 		return +d.year; }
 	));
+
+	svg.append("g")
+    .call(xAxis)
+    .classed("axis", true);
+
+    svg.append("g")
+    .call(yAxis)
+    .attr("transform","translate(" + ( width - margin ) + ",0)")
+    .classed("axis", true);
 
 	svg.selectAll("svg")
 	.data(data)
