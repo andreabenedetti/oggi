@@ -14,7 +14,7 @@ let x = d3.scaleLinear()
 .range([20, width])
 
 let y = d3.scaleLinear()
-.range([height - 50, 0])
+.range([height - 50, 30])
 
 let size = d3.scaleSqrt()
 .range([1,30])
