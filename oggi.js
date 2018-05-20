@@ -23,6 +23,8 @@ let color = d3.scaleLinear()
 .interpolate(d3.interpolateHcl)
 .range([d3.rgb("#ff0000"), d3.rgb("#0000ff")])
 
+let highlightedRect = d3.select(null)
+
 d3.csv("honeyproduction.csv", function(error, data) {
 	if (error) throw error
 
@@ -50,8 +52,14 @@ svg.selectAll("svg")
 	.attr("height", d => { return size(d.numcol)})
 	.attr("x", d => { return x(d.priceperlb)})
 	.attr("y", d => { return y(d.totalprod)})
-	.style("opacity", 0.5)
+	.style("opacity", 0.3)
 	.style("fill", d => { return color(d.year)})
+    .on("mouseover", function() {
+        d3.select(this).style("opacity", 1)
+    })
+    .on("mouseout", function() {
+       d3.selectAll("rect").style("opacity", 0.3)})
+    
 
 svg.selectAll("text")
 	.data(data)
@@ -61,6 +69,16 @@ svg.selectAll("text")
 	.attr("y", d => { return y(d.totalprod) - 2})
 	.text(d => { return d.state})
 	.classed("label", true)
+
+
+svg.selectAll("svg")
+	.data(data)
+	.enter()
+	.append("text")
+	.attr("x", d => { return x(d.priceperlb)})
+	.attr("y", d => { return y(d.totalprod) - 12})
+	.text(d => { return d.year})
+	.classed("year", true)
 	.style("fill", d => { return color(d.year)})
 
 
