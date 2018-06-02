@@ -86,13 +86,14 @@ enter.append("rect")
     	.style("opacity", 1)
     })
 
+
 /*enter.append("line")
 	.attr("x1", d => x(d.priceperlb))
-	.attr("y1", d => { return y(d.totalprod)})
-	.attr("x2", d => { return x(d.priceperlb) + 100})
-	.attr("y2", d => { return y(d.totalprod) + 100})
+	.attr("y1", d => y(d.totalprod))
+	.attr("x2", d => x(d.priceperlb) + 100)
+	.attr("y2", d => y(d.totalprod) + 100)
 	.attr("stroke", "#000000")
-	.attr("stroke-width", 2)*/
+	.attr("stroke-width", 0.5)*/
 
 let dataByState = d3.nest()
   .key( d=> d.state)
