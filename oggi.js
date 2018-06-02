@@ -12,7 +12,7 @@ let svg = d3.selectAll("body")
 
 
 //scales
-let x = d3.scaleLinear()
+let x = d3.scaleLog()
 .range([20, width - margin])
 
 let y = d3.scaleLog()
