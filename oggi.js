@@ -1,11 +1,11 @@
 let width = window.innerWidth
 let height = window.innerHeight
-let margin = 30
+let margin = 100
 
 let svg = d3.selectAll("body")
 .append("svg")
-.attr("width", width - margin)
-.attr("height", height - margin)
+.attr("width", width)
+.attr("height", height)
 .style("background", "#fbfbfb")
 //.style("border", "1px solid #919191")
 
@@ -13,10 +13,10 @@ let svg = d3.selectAll("body")
 
 //scales
 let x = d3.scaleLinear()
-.range([20, width])
+.range([20, width - margin])
 
-let y = d3.scaleLinear()
-.range([height - 50, 30])
+let y = d3.scaleLog()
+.range([height - margin, 30])
 
 let size = d3.scaleSqrt()
 .range([1,30])
@@ -46,14 +46,16 @@ enter.append("text")
 	.attr("x", d => x(d.priceperlb))
 	.attr("y", d => y(d.totalprod) - 2)
 	.text(d => d.state)
-	.classed("label", true)
+	.attr("class", d => "stateLabel_" + d.state + " label")
+	.style("mix-blend-mode", "multiply")
 
 enter.append("text")
 	.attr("x", d => x(d.priceperlb))
 	.attr("y", d => y(d.totalprod) - 12)
 	.text(d => d.year)
-	.classed("year", true)
+	.attr("class", d => "stateYear_" + d.state + " year")
 	.style("fill", d => color(d.year))
+	.style("mix-blend-mode", "multiply")
 
 enter.append("rect")
 	.attr("width", d => size(d.numcol))
@@ -63,16 +65,22 @@ enter.append("rect")
 	.attr("class", d => "stateRect_" + d.state)
 	.style("opacity", 0.3)
 	.style("fill", d => color(d.year))
+	.style("mix-blend-mode", "multiply")
     .on("mouseover", d => {
-        d3.selectAll(".stateRect_" + d.state).style("opacity", 1)
+    	d3.selectAll("rect").style("opacity", 0.1)
+    	d3.selectAll(".label").style("opacity", 0.1)
+    	d3.selectAll(".year").style("opacity", 0.1)
+        d3.selectAll(".stateRect_" + d.state).style("opacity", 0.8)
         d3.selectAll(".stateLine_" + d.state).style("opacity", 0.4)
+        d3.selectAll(".stateLabel_" + d.state).style("opacity", 1)
+        d3.selectAll(".stateYear_" + d.state).style("opacity", 1)
     })
     .on("mouseout", function() {
-       d3.selectAll("rect")
-       .style("opacity", 0.3)
-       d3.selectAll("path").style("opacity", 0)
+        d3.selectAll("rect").style("opacity", 0.3)
+        d3.selectAll("path").style("opacity", 0)
+    	d3.selectAll(".label").style("opacity", 1)
+    	d3.selectAll(".year").style("opacity", 1)
    })
-
     .on("click", d => {
     	d3.selectAll(".stateRect_" + d.state)
     	.style("opacity", 1)
@@ -93,9 +101,6 @@ let dataByState = d3.nest()
 var lineGenerator = d3.line()
     .x( d=> x(d.priceperlb))
     .y( d=> y(d.totalprod))
-
-console.log(dataByState)
-
 
 dataByState.forEach( state => {
 	let lineData = state.values
