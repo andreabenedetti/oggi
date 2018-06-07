@@ -99,7 +99,7 @@ let dataByState = d3.nest()
   .key( d=> d.state)
   .entries(data)
 
-var lineGenerator = d3.line()
+let lineGenerator = d3.line()
     .x( d=> x(d.priceperlb))
     .y( d=> y(d.totalprod))
 
